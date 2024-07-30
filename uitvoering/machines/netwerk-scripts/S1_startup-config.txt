@@ -1,0 +1,81 @@
+enable
+configure terminal
+!
+hostname S1
+!
+vlan 1
+ name Management
+!
+vlan 11
+ name Werkstations-En-Employees
+!
+vlan 13
+ name DMZ
+!
+vlan 42
+ name Servers
+!
+interface FastEthernet0/1
+ switchport mode access
+ switchport access vlan 11
+ no shutdown
+!
+interface FastEthernet0/2
+ switchport mode access
+ switchport access vlan 42
+ no shutdown
+!
+interface FastEthernet0/3
+ switchport mode access
+ switchport access vlan 42
+ no shutdown
+!
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 42
+ no shutdown
+!
+interface FastEthernet0/5
+ switchport mode access
+ switchport access vlan 1
+ no shutdown
+!
+interface FastEthernet0/6
+ switchport mode access
+ switchport access vlan 13
+ no shutdown
+!
+interface range FastEthernet0/7 - 24
+ switchport mode access
+ switchport access vlan 99
+ shutdown
+!
+interface GigabitEthernet0/1
+ description Trunk_to_R1
+ switchport mode trunk
+ switchport trunk allowed vlan 1,11,13,42
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description Trunk_to_R2
+ switchport mode trunk
+ switchport trunk allowed vlan 1,11,13,42
+ no shutdown
+!
+interface Vlan1
+ ip address 192.168.108.132 255.255.255.240
+ ip default-gateway 192.168.108.129
+ no shutdown
+!
+interface Vlan11
+ no shutdown
+!
+interface Vlan13
+ no shutdown
+!
+interface Vlan42
+ no shutdown
+!
+end
+!
+copy running-config startup-config

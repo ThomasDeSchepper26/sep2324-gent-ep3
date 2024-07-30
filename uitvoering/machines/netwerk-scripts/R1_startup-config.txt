@@ -1,0 +1,107 @@
+!
+enable
+configure terminal
+hostname R1
+!
+!
+!
+ip dhcp excluded-address 192.168.108.1 192.168.108.3
+ip dhcp excluded-address 192.168.108.128 192.168.108.255
+ip dhcp excluded-address 192.168.108.128 192.168.108.254
+!
+ip dhcp pool Werkstations-en-Employees
+ network 192.168.108.0 255.255.255.128
+ default-router 192.168.108.3
+ dns-server 172.22.128.1
+!
+!
+interface GigabitEthernet0/0/0
+ ip address 172.22.200.108 255.255.0.0
+ standby 2 ip 172.22.200.8
+ standby 2 priority 110
+ standby 2 preempt
+ ip nat outside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.1
+ ip access-group MANAGEMENT out
+ encapsulation dot1Q 1 native
+ ip address 192.168.108.129 255.255.255.240
+ standby 1 ip 192.168.108.131
+ standby 1 priority 110
+ standby 1 preempt
+ ip nat inside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.11
+ ip access-group CLIENTS out
+ encapsulation dot1Q 11
+ ip address 192.168.108.1 255.255.255.128
+ standby 1 ip 192.168.108.3
+ standby 1 priority 110
+ standby 1 preempt
+ ip nat inside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.13
+ ip access-group REVERSEPROXY out
+ encapsulation dot1Q 13
+ ip address 192.168.108.161 255.255.255.248
+ standby 1 ip 192.168.108.163
+ standby 1 priority 110
+ standby 1 preempt
+ ip nat inside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.42
+ ip access-group SERVER out
+ encapsulation dot1Q 42
+ ip address 192.168.108.145 255.255.255.240
+ standby 1 ip 192.168.108.147
+ standby 1 priority 110
+ standby 1 preempt
+ ip nat inside
+ no shutdown
+!
+exit
+!
+ip route 0.0.0.0 0.0.0.0 172.22.255.254
+!
+!
+!
+ip access-list standard MANAGEMENT
+permit ip 192.168.108.128 0.0.0.15 any
+permit icmp any any echo
+deny ip any any
+!
+ip access-list extended CLIENTS
+permit ip 192.168.108.0 0.0.0.127 any
+permit ip 192.168.108.160 0.0.0.7 any
+permit ip 192.168.108.144 0.0.0.15 any
+permit tcp any any established
+permit icmp any any echo
+deny ip any any
+!
+ip access-list extended REVERSEPROXY
+permit ip 192.168.107.150 0.0.0.0 host 192.168.107.164
+permit tcp any any establishe
+permit tcp any any eq 80
+permit tcp any any eq 443
+permit icmp any any echo
+deny ip any any
+!
+ip access-list standard SERVER
+permit udp any any
+permit tcp any any established
+permit 192.168.108.0 0.0.0.127 any
+permit 192.168.108.160 0.0.0.7 any
+permit 192.168.108.144 0.0.0.15 any
+permit icmp any any echo
+deny ip any any
+!
+!
+!
+copy running-config startup-config
+!
+end
+

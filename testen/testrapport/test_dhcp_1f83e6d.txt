@@ -1,0 +1,36 @@
+# Testrapport
+
+- Uitvoerder(s) test: Simon Erdmann
+- Uitgevoerd op: 28/03/2024
+- Github commit: 1f83e6d
+
+## Test: controleren of de dhcp configuratie in packet tracer werkt
+
+Test procedure:
+
+1.	open de configuratie van router R1
+    enable R1
+    "show ip dhcp pool"
+
+2.  open de configuratie van router R1
+    enable R1
+    "show running-config | section dhcp"
+
+3.  open de configuratie van PC en vink DHCP aan
+
+Verkregen resultaat:
+
+- router R1 bevat een pool 'Werkstations-en-Employees'
+- de dhcp pool exclude de ip-adressen van de andere subnetten + exclude ip adressen 192.168.108.1 tot 192.168.108.3
+- PC krijgt het eerste geldige ip adres uit de pool 'Werkstations-en-Employees' van R1
+
+
+Test geslaagd:
+
+- [x] Ja
+- [ ] Nee
+
+Opmerkingen:
+
+- bij de uitvoer van stap 2 staat er dat er maar 2 ip adressen excluded zijn, maar dit moeten er normaal gezien 3 zijn
+- bij de opstart van het packet tracer bestand krijgt PC een ip adres die niet in de dchp pool ligt, maar dit verandert na een paar seconden

@@ -1,0 +1,42 @@
+interface g0/0/1.1
+ip access-group MANAGEMENT out
+!
+interface g0/0/1.11
+ip access-group CLIENTS out
+!
+interface g0/0/1.13
+ip access-group REVERSEPROXY out
+!
+interface g0/0/1.42
+ip access-group SERVER out
+!
+!
+ip access-list standard MANAGEMENT
+permit ip 192.168.108.128 0.0.0.15 any
+permit icmp any any echo
+deny ip any any
+!
+ip access-list extended CLIENTS
+permit ip 192.168.108.0 0.0.0.127 any
+permit ip 192.168.108.160 0.0.0.7 any
+permit ip 192.168.108.144 0.0.0.15 any
+permit tcp any any established
+permit icmp any any echo
+deny ip any any
+!
+ip access-list extended REVERSEPROXY
+permit ip 192.168.107.150 0.0.0.0 host 192.168.107.164
+permit tcp any any establishe
+permit tcp any any eq 80
+permit tcp any any eq 443
+permit icmp any any echo
+deny ip any any
+!
+ip access-list standard SERVER
+permit udp any any
+permit tcp any any established
+permit 192.168.108.0 0.0.0.127 any
+permit 192.168.108.160 0.0.0.7 any
+permit 192.168.108.144 0.0.0.15 any
+permit icmp any any echo
+deny ip any any

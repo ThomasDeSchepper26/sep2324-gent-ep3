@@ -1,0 +1,46 @@
+---
+
+- name: dbserver
+  ip: 192.168.108.149
+  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  box: bento/almalinux-9
+
+- name: webserver
+  ip: 192.168.108.150
+  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  box: bento/almalinux-9
+
+- name: tftpserver
+  ip: 192.168.108.133
+  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  box: bento/almalinux-9
+
+- name: reverseproxy
+  ip: 192.168.108.164
+  netmask: 255.255.255.0 # in de les naar 255.255.255.248
+  box: bento/almalinux-9
+
+# Example of a more elaborate host definition
+# - name: srv002
+#   box: bento/fedora-28
+#   memory: 2048
+#   cpus: 2
+#   ip: 172.20.0.10
+#   netmask: 255.255.0.0
+#   mac: '13:37:de:ad:be:ef'
+#   playbook: srv002.yml
+#   forwarded_ports:
+#     - host: 8080
+#       guest: 80
+#     - host: 8443
+#       guest: 443
+#   synced_folders:
+#     - src: test
+#       dest: /tmp/test
+#     - src: www
+#       dest: /var/www/html
+#       options:
+#         :create: true
+#         :owner: root
+#         :group: root
+#         :mount_options: ['dmode=0755', 'fmode=0644']

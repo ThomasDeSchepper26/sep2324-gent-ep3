@@ -1,0 +1,55 @@
+# Testrapport
+
+- Uitvoerder(s) test: Simon Erdmann
+- Uitgevoerd op: 28/03/2024
+- Github commit: 1f83e6d
+
+## Test: pc pingt naar alle onderdelen van het netwerk
+
+Test procedure:
+
+1.	pc pingt naar R1:
+    klik op PC
+    navigeer naar tablad Desktop en klik op Command Prompt
+    “ping 192.168.108.1” (sub-interface op R1)
+
+2.	pc pingt naar de interne servers:
+    klik op PC
+    navigeer naar tablad Desktop en klik op Command Prompt
+    "ping 192.168.108.148" (WinServ)
+    "ping 192.168.108.149" (DB)
+    "ping 192.168.108.150" (WEB)
+
+3.  pc pingt naar de Proxy server in de DMZ
+    klik op PC
+    navigeer naar tablad Desktop en klik op Command Prompt
+    "ping 192.168.108.163" (Proxy)
+
+4.  pc pingt naar het internet
+    klik op PC
+    navigeer naar tablad Desktop en klik op Command Prompt
+    "ping 8.8.8.8"
+
+5.  pc pingt naar de TFTP server
+    klik op PC
+    navigeer naar tablad Desktop en klik op Command Prompt
+    "ping 192.168.108.133"
+
+Verkregen resultaat:
+
+- pc krijgt reply messages van R1
+- pc krijgt reply messages van de interne servers
+- pc krijgt reply messages van de Proxy server
+- pc krijgt 4 keer 'request timed out'
+- pc krijgt 4 reply messages van de TFTP server (dit mag niet)
+
+
+Test geslaagd:
+
+- [ ] Ja
+- [x] Nee
+
+Opmerkingen:
+
+- Bij het eerste keer pingen naar een interne server is je eerste reply een timed out, bij de tweede keer pingen krijg je 4 replies
+- TFTP server is bereikbaar via PC (vlan 11), dit mag niet
