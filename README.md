@@ -3,7 +3,7 @@
 | Naam     | GitHub gebruikersnaam                   |
 | :------- | :-------------------------------------- |
 | Thomas De Schepper | [ThomasDeSchepper26](https://github.com/ThomasDeSchepper26) |
-| Jelle Van Holsbeeck | [username](https://github.com/username) |
+| Jelle Van Holsbeeck | [Holsbeeck](https://github.com/Holsbeeck) |
 
 Dit is de repository voor het projectvak System Engineering Project.
 
