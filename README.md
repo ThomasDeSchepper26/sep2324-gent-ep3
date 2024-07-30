@@ -2,9 +2,8 @@
 
 | Naam     | GitHub gebruikersnaam                   |
 | :------- | :-------------------------------------- |
-| Phil Van Akoleyen | [PhilVanAkoleyen](https://github.com/PhilVanAkoleyen) |
 | Thomas De Schepper | [ThomasDeSchepper26](https://github.com/ThomasDeSchepper26) |
-| Simon Erdmann | [SimonErdmann](https://github.com/SimonErdmann) |
+| Jelle Van Holsbeeck | [username](https://github.com/username) |
 
 Dit is de repository voor het projectvak System Engineering Project.
 
