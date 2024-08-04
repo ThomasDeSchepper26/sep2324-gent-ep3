@@ -1,0 +1,38 @@
+{
+  "Forwarder": "1.1.1.1",
+  "SecondZone": "t01-syndus.internal",
+  "Reverse": "115.168.192.in-addr.arpa",
+  "NetworkID": "192.168.115.0/24",
+  "DNSRecords": [
+    {
+      "Name": "dc2",
+      "IP": "192.168.115.133",
+      "Zone": "ad.t01-syndus.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "web",
+      "IP": "192.168.115.130",
+      "Zone": "t01-syndus.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "db",
+      "IP": "192.168.115.131",
+      "Zone": "t01-syndus.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "proxy",
+      "IP": "192.168.115.146",
+      "Zone": "t01-syndus.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "t01-syndus.internal",
+      "IP": "192.168.115.146",
+      "Zone": "t01-syndus.internal",
+      "Aliases": ["www"]
+    }
+  ]
+}
