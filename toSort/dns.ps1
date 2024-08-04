@@ -1,10 +1,6 @@
 # -------------------------------------------------------------------------------------------------
-# Author: Jelle Van Holsbeeck
-# Contact: jelle.vanholsbeeck@student.hogent.be
-# OLOD: SEP
-# -------------------------------------------------------------------------------------------------
-# The following script will build upon the Windows server configuration
-# This script will do the DNS part of the configuration
+# The following script does the configuration of the DNS zone and creates all required records
+# Configuration of VARs is done with the JSON file included
 # -------------------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------------------
