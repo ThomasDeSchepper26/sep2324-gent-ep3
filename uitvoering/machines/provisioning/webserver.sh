@@ -80,11 +80,20 @@ sed -i "s/localhost/${db_host}/" "${WORDPRESS_DIR}/wp-config.php"
 
 # Restarting Web server to save changes
 log "Restarting web server"
-systemctl restart httpd
+sudo systemctl restart httpd
 
-#aanpassen van selinux
-grep denied /var/log/audit/audit.log | audit2allow -M mypol
-sudo semodule -i mypol.pp
+# Genereer SELinux beleid als er denied meldingen zijn
+if sudo grep denied /var/log/audit/audit.log | sudo audit2allow -M mypol; then
+    log "SELinux beleid gegenereerd"
+    if [ -f mypol.pp ]; then
+        sudo semodule -i mypol.pp
+        log "SELinux beleid geïnstalleerd"
+    else
+        log "SELinux beleid niet gevonden, overslaan van installatie"
+    fi
+else
+    log "Geen SELinux aanpassingen nodig"
+fi
 
 # Creating index.html page
 log "Creating index page"

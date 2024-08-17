@@ -99,6 +99,7 @@ sudo mkdir /etc/nginx/conf.d
 #------------------------------------------------------------------------------
 # Nginx config file
 #------------------------------------------------------------------------------
+log "Nginx config file"
 
 sudo rm /etc/nginx/conf/nginx.conf -f
 cat <<EOF > "/etc/nginx/conf/nginx.conf"
@@ -155,6 +156,7 @@ http {
 }
 EOF
 #Configure nginx
+log "Nginx domain config file"
 cat <<EOF > "/etc/nginx/conf.d/g08-systemsolutions.internal.conf"
 upstream backend{
     server $webserver_ip;
@@ -197,10 +199,10 @@ server {
 
     location /wordpress/ {
         proxy_pass http://192.168.108.150/wordpress/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 }
 EOF
@@ -208,11 +210,35 @@ EOF
 
 log "Configuring SELinux"
 
-# curl -k https://g08-systemsolutions.internal
-sudo cat /var/log/audit/audit.log | grep nginx | audit2allow -m nginx_custom > nginx_custom.te
-sudo checkmodule -M -m -o nginx_custom.mod nginx_custom.te
-sudo semodule_package -o nginx_custom.pp -m nginx_custom.mod
-sudo semodule -i nginx_custom.pp
+#------------------------------------------------------------------------------
+# Configuring SELinux
+#------------------------------------------------------------------------------
+log "Configuring SELinux"
+
+sudo ausearch -c 'nginx' --raw | audit2allow -M nginx_custom || {
+    log "No relevant SELinux denials found. Skipping SELinux policy creation."
+}
+
+# Step 3: Apply the SELinux module if created
+if [ -f nginx_custom.pp ]; then
+    sudo semodule -i nginx_custom.pp
+else
+    log "SELinux policy module was not created, skipping module installation."
+fi
+
+#------------------------------------------------------------------------------
+# Firewall Configuration
+#------------------------------------------------------------------------------
+log "Configuring Firewall"
+
+sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
+sudo firewall-cmd --reload
+
+sudo systemctl restart nginx
+
+log '=== Provisioning completed successfully ==='
+exit 0
 
 # Firewall
 sudo firewall-cmd --zone=public --add-port=80/tcp --permanent

@@ -7,7 +7,7 @@
 Testprocedure:
 
 1. Start de Windows server en Windows client in virtualbox
-2. Open command prompt op de Windows client en voer het commando  `nslookup ad.g08-systemsolutions.internal` uit
+2. Open command prompt op de Windows client en voer het commando  `nslookup g08-systemsolutions.internal` uit
 
 Verwacht resultaat:
 
