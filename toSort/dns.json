@@ -1,6 +1,6 @@
 {
   "Forwarder": "1.1.1.1",
-  "SecondZone": "t01-syndus.internal",
+  "SecondZone": "g08-syndus.internal",
   "Reverse": "108.168.192.in-addr.arpa",
   "NetworkID": "192.168.108.0/24",
   "DNSRecords": [
