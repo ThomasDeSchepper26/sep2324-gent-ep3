@@ -47,7 +47,10 @@ sudo dnf install gcc pcre-devel zlib-devel openssl-devel -y
  cd nginx-1.21.4/
  wget https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v0.37.tar.gz
  tar -xzvf v0.37.tar.gz
- mkdir -p /nginx-1.21.4/src/http/modules
+
+ if [ -d "/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37" ]; then
+    sudo rm -rf /nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37
+fi
  mv headers-more-nginx-module-0.37 /nginx-1.21.4/src/http/modules/
  ./configure --prefix=/etc/nginx --add-module=/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37 --with-http_ssl_module --with-http_v2_module
 
@@ -93,8 +96,8 @@ systemctl enable --now nginx
 
 log "Starting nginx config"
 
-sudo mkdir /etc/nginx/certs
-sudo mkdir /etc/nginx/conf.d
+sudo mkdir -p /etc/nginx/certs
+sudo mkdir -p /etc/nginx/conf.d
 
 #------------------------------------------------------------------------------
 # Nginx config file

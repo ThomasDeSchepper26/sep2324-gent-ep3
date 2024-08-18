@@ -1,68 +1,64 @@
-#! /bin/bash
-
-# Provisioning script for database server
-
-#------------------------------------------------------------------------------
-# Bash settings
-#------------------------------------------------------------------------------
+#!/bin/bash
 
 # Enable "Bash strict mode"
-set -o errexit   # abort on nonzero exitstatus
-set -o nounset   # abort on unbound variable
-set -o pipefail  # don't mask errors in piped commands
+set -o errexit
+set -o nounset
+set -o pipefail
 
-#------------------------------------------------------------------------------
 # Variables
-#------------------------------------------------------------------------------
-
-# Location of provisioning scripts and files
 readonly PROVISIONING_SCRIPTS="/vagrant/provisioning/"
-# Location of files to be copied to this server
-readonly PROVISIONING_FILES="${PROVISIONING_SCRIPTS}/files/${HOSTNAME}"
-
 readonly db_root_password='sep8wachtwoord'
 readonly db_name='g08db'
-readonly db_table='table'
 readonly db_user='Administrator'
 readonly db_password='23Admin24'
 readonly webserver_ip="192.168.108.150"
 
-#------------------------------------------------------------------------------
-# Functions
-#------------------------------------------------------------------------------
-
-# Actions/settings common to all servers
+# Source common functions
 source ${PROVISIONING_SCRIPTS}/common.sh
 
-#------------------------------------------------------------------------------
-# Provisioning tasks
-#------------------------------------------------------------------------------
-
-# MariaDB installeren
-dnf install -y mariadb-server
+# Install MariaDB
+sudo dnf install -y mariadb-server
 
 # Start and enable MariaDB
-systemctl start mariadb
-systemctl enable mariadb
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
 
-# Firewall voor mariadb en ssh configureren
-systemctl enable firewalld
-firewall-cmd --permanent --add-port=3306/tcp
-firewall-cmd --permanent --add-service=ssh
-firewall-cmd --reload
+# Configure firewall
+sudo systemctl enable firewalld
+sudo firewall-cmd --permanent --add-port=3306/tcp
+sudo firewall-cmd --permanent --add-service=ssh
+sudo firewall-cmd --reload
 
-sudo sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sudo systemctl restart sshd
+# Secure MariaDB installation
+sudo mysql_secure_installation <<EOF
 
-# Database-initialisatie en configuratie
-mysql -u root -p <<EOF
+y
+${db_root_password}
+${db_root_password}
+y
+y
+y
+y
+EOF
+
+# Wait for MariaDB to initialize
+sleep 10
+
+# Database initialization and configuration
+mysql --user=root --password="${db_root_password}" <<EOF
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${db_root_password}');
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-DROP DATABASE IF EXISTS g08db;
-DELETE FROM mysql.db WHERE Db='g08db' OR Db='g08db\\_%';
+DROP DATABASE IF EXISTS ${db_name};
+DELETE FROM mysql.db WHERE Db='${db_name}' OR Db='${db_name}\\_%';
 CREATE DATABASE IF NOT EXISTS ${db_name};
 GRANT ALL ON ${db_name}.* TO '${db_user}'@'${webserver_ip}' IDENTIFIED BY '${db_password}';
 FLUSH PRIVILEGES;
 EOF
+
+# Verify database creation
+mysql --user=root --password="${db_root_password}" -e "SHOW DATABASES;"
+mysql --user=root --password="${db_root_password}" -e "SELECT User, Host FROM mysql.user;"
+
+echo "Database provisioning completed successfully."
+exit 0

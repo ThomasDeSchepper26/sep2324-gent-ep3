@@ -55,7 +55,8 @@ vboxmanage modifyvm $vmnaam --clipboard bidirectional
 vboxmanage modifyvm $vmnaam --draganddrop bidirectional
 
 # Voeg een gedeelde map toe
-$shared_folder_path = "C:\Users\thomd\HoGent\3de JAAR\SEP\sep2324-gent-g08\uitvoering\machines\winscripts\winclient"
+$shared_folder_path = "C:\Users\thomd\HoGent\3de JAAR\EP3\SEP\sep2324-gent-ep3\uitvoering\machines\winscripts\winclient"
+
 vboxmanage sharedfolder add $vmnaam --name "shared" --hostpath $shared_folder_path --automount
 
 # Start de virtuele machine

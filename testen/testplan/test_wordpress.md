@@ -23,7 +23,7 @@ Verwacht resultaat:
 
 Testprocedure:
 
-1. Start de webserver op in de terminal met `vagrant up webserver` en `vagrant up dbserver`.
+1. Start de webserver en databaseserver op in de terminal met `vagrant up webserver` en `vagrant up dbserver`.
 2. Start de Windows client op in virtualbox. 
 3. Open op de client microsoft edge en surf naar http://192.168.108.150
 

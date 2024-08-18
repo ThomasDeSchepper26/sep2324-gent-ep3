@@ -95,6 +95,9 @@ else
     log "Geen SELinux aanpassingen nodig"
 fi
 
+# Voeg het SELinux-commando toe
+sudo setsebool -P httpd_can_network_connect_db 1
+
 # Creating index.html page
 log "Creating index page"
 touch /var/www/html/index.html

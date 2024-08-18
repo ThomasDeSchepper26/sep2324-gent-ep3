@@ -8,7 +8,7 @@
 | ping 8.8.8.8                | ping naar 8.8.8.8 (IP werkt)                                   | win client     |
 | ping www.belnet.be          | ping naar www.belnet.be (DNS werkt)                            | win client     |
 | Thomas 23log&in24 Powershell | Bewijs dat een (domain)gebruiker geen rechten heeft op een network share (en domain admin wel) | winclient |
-| Thomas kan script niet uitvoeren, admin wel | Toon de werking van een GPO aan d.h.v. een demo                 | win client     |
+|  | Toon de werking van een GPO aan d.h.v. een demo                 | win client     |
 | ping 192.168.108.164        | ping naar het IP van de reverse proxy                          | win client     |
 | ping 192.168.108.150        | ping naar het IP van de webserver                              | win client     |
 | nslookup g08-systemsolutions.internal | nslookup van <jouw groepsnaam>.internal                | win client     |
