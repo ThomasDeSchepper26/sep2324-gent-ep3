@@ -42,23 +42,23 @@ log "Installing nginx reverse proxy"
 
 sudo dnf install gcc pcre-devel zlib-devel openssl-devel -y
 
- wget 'http://nginx.org/download/nginx-1.21.4.tar.gz'
- tar -xzvf nginx-1.21.4.tar.gz
- cd nginx-1.21.4/
- wget https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v0.37.tar.gz
- tar -xzvf v0.37.tar.gz
+wget 'http://nginx.org/download/nginx-1.21.4.tar.gz'
+tar -xzvf nginx-1.21.4.tar.gz
+cd nginx-1.21.4/
+wget https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v0.37.tar.gz
+tar -xzvf v0.37.tar.gz
 
- if [ -d "/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37" ]; then
+if [ -d "/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37" ]; then
     sudo rm -rf /nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37
 fi
- mv headers-more-nginx-module-0.37 /nginx-1.21.4/src/http/modules/
- ./configure --prefix=/etc/nginx --add-module=/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37 --with-http_ssl_module --with-http_v2_module
+mv headers-more-nginx-module-0.37 /nginx-1.21.4/src/http/modules/
+./configure --prefix=/etc/nginx --add-module=/nginx-1.21.4/src/http/modules/headers-more-nginx-module-0.37 --with-http_ssl_module --with-http_v2_module
 
- make
- sudo make install
+make
+sudo make install
 
- cat <<EOF > "/etc/systemd/system/nginx.service"
- [Unit]
+cat <<EOF > "/etc/systemd/system/nginx.service"
+[Unit]
 Description=nginx - high performance web server
 After=network.target
 
@@ -92,7 +92,7 @@ sudo chmod 600 /etc/ssl/certs/myKey.key /etc/ssl/certs/myCertificate.crt
 log "Enabling nginx service"
 sudo systemctl start nginx
 
-systemctl enable --now nginx
+sudo systemctl enable --now nginx
 
 log "Starting nginx config"
 
@@ -210,40 +210,44 @@ server {
 }
 EOF
 
-
-log "Configuring SELinux"
-
 #------------------------------------------------------------------------------
-# Configuring SELinux
+# SELinux Configuration
 #------------------------------------------------------------------------------
 log "Configuring SELinux"
 
-sudo ausearch -c 'nginx' --raw | audit2allow -M nginx_custom || {
+# Generate SELinux policy for nginx if there are denials
+if sudo ausearch -c 'nginx' --raw | audit2allow -M nginx_custom; then
+    log "SELinux policy module nginx_custom created."
+else
     log "No relevant SELinux denials found. Skipping SELinux policy creation."
-}
+fi
 
-# Step 3: Apply the SELinux module if created
+# Apply the SELinux module if created
 if [ -f nginx_custom.pp ]; then
     sudo semodule -i nginx_custom.pp
+    if semodule -l | grep -q nginx_custom; then
+        log "SELinux policy module nginx_custom successfully installed."
+    else
+        log "SELinux policy module installation failed."
+    fi
 else
     log "SELinux policy module was not created, skipping module installation."
 fi
+
+#------------------------------------------------------------------------------
+# Additional SELinux Rules for Upstream Connection
+#------------------------------------------------------------------------------
+log "Adding SELinux rules for NGINX upstream connection"
+
+# Create and apply SELinux module to allow upstream connection
+sudo ausearch -m avc -ts recent | audit2allow -M nginx_upstream
+sudo semodule -i nginx_upstream.pp
 
 #------------------------------------------------------------------------------
 # Firewall Configuration
 #------------------------------------------------------------------------------
 log "Configuring Firewall"
 
-sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
-sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
-sudo firewall-cmd --reload
-
-sudo systemctl restart nginx
-
-log '=== Provisioning completed successfully ==='
-exit 0
-
-# Firewall
 sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
 sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
 sudo firewall-cmd --reload
