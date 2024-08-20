@@ -65,6 +65,8 @@ interface GigabitEthernet0/0/1.42
 !
 exit
 !
+! NAT configuratie voor port forwarding
+ip nat inside source static tcp 192.168.108.161 80 interface GigabitEthernet0/0/0 80
 ip route 0.0.0.0 0.0.0.0 172.22.255.254
 !
 !
