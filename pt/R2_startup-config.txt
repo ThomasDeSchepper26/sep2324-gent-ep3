@@ -13,10 +13,10 @@ ip dhcp pool Werkstations-en-Employees
 !
 ! Interface-configuraties
 !
-interface GigabitEthernet0/0/1
+interface GigabitEthernet0/1
  no shutdown
 !
-interface GigabitEthernet0/0/0
+interface GigabitEthernet0/0
  ip address 172.22.200.208 255.255.0.0
  standby 2 ip 172.22.200.8
  standby 2 priority 90
@@ -24,7 +24,7 @@ interface GigabitEthernet0/0/0
  ip nat outside
  no shutdown
 !
-interface GigabitEthernet0/0/1.1
+interface GigabitEthernet0/1.1
  ip access-group MANAGEMENT out
  encapsulation dot1Q 1 native
  ip address 192.168.108.130 255.255.255.240
@@ -34,7 +34,7 @@ interface GigabitEthernet0/0/1.1
  ip nat inside
  no shutdown
 !
-interface GigabitEthernet0/0/1.11
+interface GigabitEthernet0/1.11
  ip access-group CLIENTS out
  encapsulation dot1Q 11
  ip address 192.168.108.2 255.255.255.128
@@ -44,7 +44,7 @@ interface GigabitEthernet0/0/1.11
  ip nat inside
  no shutdown
 !
-interface GigabitEthernet0/0/1.13
+interface GigabitEthernet0/1.13
  ip access-group REVERSEPROXY out
  encapsulation dot1Q 13
  ip address 192.168.108.162 255.255.255.248
@@ -54,7 +54,7 @@ interface GigabitEthernet0/0/1.13
  ip nat inside
  no shutdown
 !
-interface GigabitEthernet0/0/1.42
+interface GigabitEthernet0/1.42
  ip access-group SERVER out
  encapsulation dot1Q 42
  ip address 192.168.108.146 255.255.255.240
@@ -70,7 +70,7 @@ ip route 0.0.0.0 0.0.0.0 172.22.255.254
 ! NAT-configuratie voor port forwarding
  ip nat inside source static tcp 192.168.108.164 80 172.22.200.8 80
  ip nat inside source static tcp 192.168.108.164 443 172.22.200.8 443
- ip nat inside source list PAT interface GigabitEthernet0/0/0 overload
+ ip nat inside source list PAT interface GigabitEthernet0/0 overload
 !
 ! Access-lijsten
 ip access-list standard PAT

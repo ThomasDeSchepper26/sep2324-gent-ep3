@@ -1,19 +1,20 @@
-!
 enable
 configure terminal
 hostname R1
 !
-!
-!
+! DHCP-configuratie
 ip dhcp excluded-address 192.168.108.1 192.168.108.3
 ip dhcp excluded-address 192.168.108.128 192.168.108.255
-ip dhcp excluded-address 192.168.108.128 192.168.108.254
 !
 ip dhcp pool Werkstations-en-Employees
  network 192.168.108.0 255.255.255.128
  default-router 192.168.108.3
  dns-server 172.22.128.1
 !
+! Interface-configuraties
+!
+interface GigabitEthernet0/0/1
+ no shutdown
 !
 interface GigabitEthernet0/0/0
  ip address 172.22.200.108 255.255.0.0
@@ -63,48 +64,51 @@ interface GigabitEthernet0/0/1.42
  ip nat inside
  no shutdown
 !
-exit
-!
-! NAT configuratie voor port forwarding
-ip nat inside source static tcp 192.168.108.161 80 interface GigabitEthernet0/0/0 80
-!
+! Routing-configuratie
 ip route 0.0.0.0 0.0.0.0 172.22.255.254
 !
+! NAT-configuratie voor port forwarding
+ ip nat inside source static tcp 192.168.108.164 80 172.22.200.8 80
+ ip nat inside source static tcp 192.168.108.164 443 172.22.200.8 443
+ ip nat inside source list PAT interface GigabitEthernet0/0/0 overload
 !
+! Access-lijsten
+ip access-list standard PAT
+ permit 192.168.108.0 0.0.0.255
+ deny any
 !
-ip access-list standard MANAGEMENT
-permit ip 192.168.108.128 0.0.0.15 any
-permit icmp any any echo
-deny ip any any
+ip access-list extended MANAGEMENT
+ permit ip 192.168.108.128 0.0.0.15 any
+ permit icmp any any echo
+ deny ip any any
 !
 ip access-list extended CLIENTS
-permit ip 192.168.108.0 0.0.0.127 any
-permit ip 192.168.108.160 0.0.0.7 any
-permit ip 192.168.108.144 0.0.0.15 any
-permit tcp any any established
-permit icmp any any echo
-deny ip any any
+ permit ip 192.168.108.0 0.0.0.127 any
+ permit ip 192.168.108.160 0.0.0.7 any
+ permit ip 192.168.108.144 0.0.0.15 any
+ permit tcp any any established
+ permit icmp any any echo
+ deny ip any any
 !
 ip access-list extended REVERSEPROXY
-permit ip 192.168.107.150 0.0.0.0 host 192.168.107.164
-permit tcp any any established
-permit tcp any any eq 80
-permit tcp any any eq 443
-permit icmp any any echo
-deny ip any any
+ permit ip 192.168.108.150 0.0.0.0 host 192.168.108.164
+ permit tcp any any established
+ permit tcp any any eq 80
+ permit tcp any any eq 443
+ permit icmp any any echo
+ deny ip any any
 !
-ip access-list standard SERVER
-permit udp any any
-permit tcp any any established
-permit 192.168.108.0 0.0.0.127 any
-permit 192.168.108.160 0.0.0.7 any
-permit 192.168.108.144 0.0.0.15 any
-permit icmp any any echo
-deny ip any any
+ip access-list extended SERVER
+ permit udp any any
+ permit tcp any any established
+ permit ip 192.168.108.0 0.0.0.127 any
+ permit ip 192.168.108.160 0.0.0.7 any
+ permit ip 192.168.108.144 0.0.0.15 any
+ permit icmp any any echo
+ deny ip any any
 !
-!
+end
 !
 copy running-config startup-config
 !
 end
-
