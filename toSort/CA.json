@@ -1,0 +1,16 @@
+{
+  "CAName": "RootCA",
+  "DomainName": "g08-syndus.internal",
+  "WebServerName": "web",
+  "WebServerCertName": "webCert",
+  "WebServerCertTemplate": "WebServer",
+  "WebServerCertValidityYears": 5,
+  "GPOName": "DistributeCA",
+  "GPODescription": "Distribute CA to all domain clients",
+  "PfxPassword": "ANewUnbreakablePassword",
+  "Paths": {
+    "CertExportPath": "C:\\path\\to\\RootCA.cer",
+    "PfxExportPath": "C:\\path\\to\\web01.pfx",
+    "GpoBackupPath": "C:\\path\\to\\GPOBackup"
+  }
+}

@@ -7,25 +7,25 @@
     {
       "Name": "web",
       "IP": "192.168.108.150",
-      "Zone": "t01-syndus.internal",
+      "Zone": "g08-syndus.internal",
       "Aliases": []
     },
     {
       "Name": "db",
       "IP": "192.168.108.149",
-      "Zone": "t01-syndus.internal",
+      "Zone": "g08-syndus.internal",
       "Aliases": []
     },
     {
       "Name": "proxy",
       "IP": "192.168.108.164",
-      "Zone": "t01-syndus.internal",
+      "Zone": "g08-syndus.internal",
       "Aliases": []
     },
     {
-      "Name": "t01-syndus.internal",
+      "Name": "g08-syndus.internal",
       "IP": "192.168.108.164",
-      "Zone": "t01-syndus.internal",
+      "Zone": "g08-syndus.internal",
       "Aliases": ["www"]
     }
   ]
