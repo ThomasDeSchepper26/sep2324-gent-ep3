@@ -1,52 +1,77 @@
 # Leaned on official documentation: 
 # https://learn.microsoft.com/en-us/windows-server/networking/core-network-guide/cncg/server-certs/install-the-certification-authority
 # https://learn.microsoft.com/en-us/powershell/module/adcsdeployment/install-adcscertificationauthority?view=windowsserver2022-ps
+# https://learn.microsoft.com/en-us/dotnet/framework/wcf/feature-details/how-to-create-temporary-certificates-for-use-during-development
+# Further documentation:
+# https://sslinsights.com/self-signed-ssl-certificate-in-powershell/
+# https://iceburn.medium.com/generate-self-signed-certificate-with-powershell-31c4ec91f9b6
+# https://gist.github.com/jrotello/e3a744334f6324fcea32a6ec3941e0a2
+# https://pleasantpasswords.com/info/pleasant-password-server/b-server-configuration/2-certificates/setting-up-a-self-signed-certificate
+
 
 $config = Get-Content -Raw -Path ".\CA.json" | ConvertFrom-Json
 
-$activeUser = (Get-WMIObject -Class Win32_ComputerSystem | Select-Object -ExpandProperty UserName)
-$activeUserProfile = (Get-WmiObject Win32_UserProfile | Where-Object { $_.Special -eq $false -and $_.LocalPath -like "*$activeUser*" }).LocalPath
-$desktopPath = [System.IO.Path]::Combine($activeUserProfile, "Desktop")
-
-$certExportPath = [System.IO.Path]::Combine($desktopPath, "RootCA.cer")
-$pfxExportPath = [System.IO.Path]::Combine($desktopPath, "webCert.pfx")
-$gpoBackupPath = [System.IO.Path]::Combine($desktopPath, "GPOBackup")
-
-Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
-
-$caConfig = @{
-    CACommonName = $config.CAName
-    CAType = 'EnterpriseRootCA'
+# Check if script is run as administrator
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$isAdministrator = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if ($isAdministrator -eq $false) {
+    Write-Host ($writeEmptyLine + "# Please run PowerShell as Administrator" + $writeSeperatorSpaces + $currentTime)`
+    -foregroundcolor $foregroundColor1 $writeEmptyLine
+    Start-Sleep -s 5
+    exit
 }
 
-Install-AdcsCertificationAuthority @caConfig
+Install-WindowsFeature -Name ADCS-Cert-Authority -IncludeManagementTools
 
-$certTemplate = $config.WebServerCertTemplate
-$certName = $config.WebServerCertName
-$webServer = $config.WebServerName
-$validityYears = $config.WebServerCertValidityYears
+# To move to JSON
+$CAConfig = @{
+    CAType              = 'EnterpriseRootCA'
+    CACommonName        = "$env:COMPUTERNAME-CA"
+    KeyLength           = 2048
+    HashAlgorithmName   = 'SHA256'
+    ValidityPeriod      = 'Years'
+    ValidityPeriodUnits = 10
+    DatabaseDirectory   = 'C:\Windows\System32\CertLog'
+    LogDirectory        = 'C:\Windows\System32\CertLog'
+}
 
-$webServerCert = New-SelfSignedCertificate -DnsName $webServer -CertStoreLocation "Cert:\LocalMachine\My" -FriendlyName $certName -NotAfter (Get-Date).AddYears($validityYears)
+Install-AdcsCertificationAuthority @CAConfig
 
-$pfxPassword = ConvertTo-SecureString -String $config.PfxPassword -Force -AsPlainText
-Export-PfxCertificate -Cert $webServerCert -FilePath $pfxExportPath -Password $pfxPassword
+Start-Service ADCS
 
-Write-Host "Web server certificate exported to $pfxExportPath"
+$webServerTemplate = Get-CATemplate | Where-Object { $_.Name -eq "Web Server" }
+$customTemplate = $webServerTemplate.Duplicate()
 
-$caCert = Get-ChildItem -Path Cert:\LocalMachine\CA | Where-Object { $_.Issuer -eq $_.Subject }
-Export-Certificate -Cert $caCert -FilePath $certExportPath
+# To move to JSON
+$customTemplate.DisplayName = "InternalWebServer"
+$customTemplate.ValidityPeriod = "Years"
+$customTemplate.ValidityPeriodUnits = 5
+$customTemplate.PublishingFlags = "AllowAutoEnroll"
 
-Write-Host "Root CA certificate exported to $certExportPath"
+$customTemplate | Add-CATemplate
 
-New-GPO -Name $config.GPOName -Comment $config.GPODescription
+$CAName = (Get-ADCSCertificationAuthority).Name
 
-$domain = Get-ADDomain
-New-GPLink -Name $config.GPOName -Target $domain.DistinguishedName
+$certRequest = @{
+    Subject              = "CN=web.g08-syndus.internal"
+    Template             = "InternalWebServer"
+    CertStoreLocation    = "Cert:\LocalMachine\My"
+    DnsName              = "web.g08-syndus.internal"
+}
 
-$gpo = Get-GPO -Name $config.GPOName
-Backup-GPO -Guid $gpo.Id -Path $gpoBackupPath
+$cert = New-SelfSignedCertificate @certRequest
 
-Write-Host "GPO backed up to $gpoBackupPath"
+$PfxPassword = ConvertTo-SecureString -String "YourP@ssw0rd" -Force -AsPlainText
+Export-PfxCertificate -Cert $cert -FilePath "C:\Certs\internalwebserver.pfx" -Password $PfxPassword
 
-Write-Host "All files have been saved to the desktop of the active user ($activeUser)."
+Export-Certificate -Cert $CAName -FilePath "C:\Certs\RootCA.cer"
+
+Import-Module GroupPolicy
+$gpo = New-GPO -Name "Deploy Root CA Certificate"
+$gpoPath = "LDAP://cn=Public Key Services,cn=Public Key Services,CN=Services,CN=Configuration,DC=yourdomain,DC=com"
+Import-Certificate -FilePath "C:\Certs\RootCA.cer" -CertStoreLocation "Cert:\LocalMachine\Root"
+
+New-GPLink -Name "Deploy Root CA Certificate" -Target "LDAP://DC=g08-syndus,DC=internal"
+
+Write-Host "Certificate Authority setup complete, certificate issued and GPO created for deployment."
 
