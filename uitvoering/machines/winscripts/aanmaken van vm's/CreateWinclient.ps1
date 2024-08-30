@@ -80,7 +80,6 @@ foreach ($VM in $VMs) {
 
     # Shared folder and group adding
     VBoxManage sharedfolder add $($VM["Name"]) --name $SHARED_FOLDER_NAME --hostpath "$SHARED_FOLDER_PATH" --automount
-    VBoxManage modifyvm $($VM["Name"]) --groups $GROUP_NAME
     Write-Host "$($VM["Name"]) setup completed" -ForegroundColor Green
     Write-Host "-------------------------------------"
 }
