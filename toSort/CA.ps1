@@ -9,9 +9,9 @@
 # https://pleasantpasswords.com/info/pleasant-password-server/b-server-configuration/2-certificates/setting-up-a-self-signed-certificate
 
 
-$config = Get-Content -Raw -Path ".\CA.json" | ConvertFrom-Json
+$CAconfig = Get-Content -Raw -Path ".\CAconfig.json" | ConvertFrom-Json
 
-# Check if script is run as administrator
+# Check if script is run as administrator and quit otherwise 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 $isAdministrator = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if ($isAdministrator -eq $false) {
@@ -23,22 +23,18 @@ if ($isAdministrator -eq $false) {
 
 Install-WindowsFeature -Name ADCS-Cert-Authority -IncludeManagementTools
 
-# To move to JSON
-$CAConfig = @{
-    CAType              = 'EnterpriseRootCA'
-    CACommonName        = "$env:COMPUTERNAME-CA"
-    KeyLength           = 2048
-    HashAlgorithmName   = 'SHA256'
-    ValidityPeriod      = 'Years'
-    ValidityPeriodUnits = 10
-    DatabaseDirectory   = 'C:\Windows\System32\CertLog'
-    LogDirectory        = 'C:\Windows\System32\CertLog'
-}
-
-Install-AdcsCertificationAuthority @CAConfig
+Install-AdcsCertificationAuthority -CAType $CAConfig.CAType `
+                                   -CACommonName $CAConfig.CACommonName `
+                                   -KeyLength $CAConfig.KeyLength `
+                                   -HashAlgorithmName $CAConfig.HashAlgorithmName `
+                                   -ValidityPeriod $CAConfig.ValidityPeriod `
+                                   -ValidityPeriodUnits $CAConfig.ValidityPeriodUnits `
+                                   -DatabaseDirectory $CAConfig.DatabaseDirectory `
+                                   -LogDirectory $CAConfig.LogDirectory
 
 Start-Service ADCS
 
+# Generation of the certificate
 $webServerTemplate = Get-CATemplate | Where-Object { $_.Name -eq "Web Server" }
 $customTemplate = $webServerTemplate.Duplicate()
 
