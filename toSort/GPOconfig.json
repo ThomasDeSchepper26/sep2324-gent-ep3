@@ -1,0 +1,6 @@
+{
+  "GPOName": "Distribute Certificate",
+  "CertFilePath": "C:\\Certificaten\\WebCert.cer",
+  "Domain": "g08-syndus",
+  "GPOPath": "\\\\g08-syndus.internal\\SYSVOL\\g08-syndus.internal\\Policies\\{GPOID}\\Machine\\Microsoft\\Public Key Policies\\Trusted Root Certification Authorities"
+}
