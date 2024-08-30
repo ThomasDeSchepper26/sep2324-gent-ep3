@@ -1,5 +1,5 @@
 {
-  "CertName": "web.g08-syndus.internal",
+  "CertName": "proxy.g08-systemsolutions.internal",
   "CertPassword": "ASecurePassword123",
   "KeyLength": 2048,
   "HashAlgorithm": "SHA256",

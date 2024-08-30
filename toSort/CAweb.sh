@@ -12,7 +12,7 @@ set -o pipefail  # don't mask errors in piped commands
 # Variables
 #------------------------------------------------------------------------------
 
-source /path/to/ssl_config.sh
+source ./CAwebVAR.sh
 
 #------------------------------------------------------------------------------
 # Configure SSL for Apache

@@ -1,0 +1,14 @@
+[VM1]
+Name=WinClientg8
+MemorySize=4096
+CpuCount=4
+HddSize=40000
+Vram=128
+OSTYPE=Windows10_64
+IsoPath=C:\Users\jelle\Downloads\client.iso
+Username=Administrator
+Password=23Admin24
+ImageIndex=7
+Language=en-US
+Country=BE
+ProductKey=K2CNQ-DXFRH-J7PBT-8C42K-C7KRY
