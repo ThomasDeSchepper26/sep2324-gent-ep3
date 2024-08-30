@@ -2,22 +2,22 @@
 
 - name: dbserver
   ip: 192.168.108.149
-  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  netmask: 255.255.255.240 # in de les naar 255.255.255.240
   box: bento/almalinux-9
 
 - name: webserver
   ip: 192.168.108.150
-  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  netmask: 255.255.255.240 # in de les naar 255.255.255.240
   box: bento/almalinux-9
 
 - name: tftpserver
   ip: 192.168.108.133
-  netmask: 255.255.255.0 # in de les naar 255.255.255.240
+  netmask: 255.255.255.240 # in de les naar 255.255.255.240
   box: bento/almalinux-9
 
 - name: reverseproxy
   ip: 192.168.108.164
-  netmask: 255.255.255.0 # in de les naar 255.255.255.248
+  netmask: 255.255.255.248 # in de les naar 255.255.255.248
   box: bento/almalinux-9
 
 # Example of a more elaborate host definition

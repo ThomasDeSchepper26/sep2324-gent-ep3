@@ -82,9 +82,30 @@ Nuttige commando's:
 
 - ophalen running-config op R1
 ```bash
- interface GigabitEthernet0/0/1.11
- no shutdown
+ en
+ conf t
+ interface g0/0/1
+ ip address 192.168.108.134 255.255.255.240
+ no shut
+ exit
+ ip tftp source-interface g0/0/1
+ end
  copy tftp running-config
  192.168.108.133
  R1_startup-config.txt
+```
+
+- ophalen running-config op R2
+```bash
+ en
+ conf t
+ interface g0/0/1
+ ip address 192.168.108.135 255.255.255.240
+ no shut
+ exit
+ ip tftp source-interface g0/0/1
+ end
+ copy tftp running-config
+ 192.168.108.133
+ R2_startup-config.txt
 ```

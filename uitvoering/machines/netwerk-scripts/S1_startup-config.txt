@@ -4,7 +4,7 @@ configure terminal
 hostname S1
 !
 vlan 11
- name Werkstations-En-Employees
+ name Clients
 !
 vlan 13
  name DMZ
