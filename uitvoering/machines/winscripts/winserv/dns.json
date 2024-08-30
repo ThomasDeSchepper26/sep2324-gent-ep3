@@ -1,33 +1,32 @@
 {
-    "Forwarder": "8.8.8.8",
-    "SecondZone": "g08-systemsolutions.internal",
-    "Reverse": "108.168.192.in-addr.arpa",
-    "NetworkID": "192.168.108.0/24",
-    "DNSRecords": [
-      {
-        "Name": "web",
-        "IP": "192.168.108.150",
-        "Zone": "g08-systemsolutions.internal",
-        "Aliases": []
-      },
-      {
-        "Name": "db",
-        "IP": "192.168.108.149",
-        "Zone": "g08-systemsolutions.internal",
-        "Aliases": []
-      },
-      {
-        "Name": "proxy",
-        "IP": "192.168.108.164",
-        "Zone": "g08-systemsolutions.internal",
-        "Aliases": []
-      },
-      {
-        "Name": "g08-systemsolutions.internal",
-        "IP": "192.168.108.164",
-        "Zone": "g08-systemsolutions.internal",
-        "Aliases": ["www"]
-      }
-    ]
-  }
-  
+  "Forwarder": "8.8.8.8",
+  "SecondZone": "g08-systemsolutions.internal",
+  "Reverse": "108.168.192.in-addr.arpa",
+  "NetworkID": "192.168.108.0/24",
+  "DNSRecords": [
+    {
+      "Name": "web",
+      "IP": "192.168.108.150",
+      "Zone": "g08-systemsolutions.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "db",
+      "IP": "192.168.108.149",
+      "Zone": "g08-systemsolutions.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "proxy",
+      "IP": "192.168.108.164",
+      "Zone": "g08-systemsolutions.internal",
+      "Aliases": []
+    },
+    {
+      "Name": "g08-systemsolutions.internal",
+      "IP": "192.168.108.164",
+      "Zone": "g08-systemsolutions.internal",
+      "Aliases": ["www"]
+    }
+  ]
+}
