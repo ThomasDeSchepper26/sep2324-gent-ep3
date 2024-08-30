@@ -1,0 +1,58 @@
+# Git Bash CLI can use this to actually give me description of the default network adapter
+defBridge=`ipconfig -all | awk '/Ethernet adapter/{iface=$0} /Description/{desc=$0} /Default Gateway/{if($NF!=""){sub(/.*: /,"",desc); print desc; exit}}'`
+
+# The creation of the NAT interface, seems intended use as found in following documentation: 
+# https://developer.hashicorp.com/vagrant/docs/networking#there-is-a-nat-available
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "almalinux/9"
+
+  # TFTP
+  config.vm.define "tftp" do |m1|
+    m1.vm.provider "virtualbox" do |vb|
+      vb.name = "tftp"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+    m1.vm.network "public_network", bridge: defBridge
+    m1.vm.provision "shell", path: "./tftp/tftp-setup.sh"
+    m1.vm.provision "shell", path: "./ssh-disable.sh"
+  end
+
+  # PROXY
+  config.vm.define "proxy" do |m2|
+    m2.vm.provider "virtualbox" do |vb|
+      vb.name = "proxy"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+    m2.vm.network "public_network", bridge: defBridge
+    m2.vm.provision "shell", path: "./proxy/proxy-setup.sh"
+    m2.vm.provision "shell", path: "./proxy/proxy-hardening.sh"
+    m2.vm.provision "shell", path: "./ssh-disable.sh"
+  end
+
+  # DB
+  config.vm.define "db" do |m3|
+    m3.vm.provider "virtualbox" do |vb|
+      vb.name = "db"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+    m3.vm.network "public_network", bridge: defBridge
+    m3.vm.provision "shell", path: "./db/db-setup.sh"
+    m3.vm.provision "shell", path: "./ssh-disable.sh"
+  end
+  
+  # WEB
+  config.vm.define "web" do |m4|
+    m4.vm.provider "virtualbox" do |vb|
+      vb.name = "web"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+    m4.vm.network "public_network", bridge: defBridge
+    m4.vm.provision "shell", path: "./web/web-setup.sh"
+    m4.vm.provision "shell", path: "./ssh-disable.sh"
+  end
+end

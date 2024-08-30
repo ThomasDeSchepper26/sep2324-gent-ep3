@@ -1,0 +1,12 @@
+access-list 113 permit ip host 192.168.115.146 host 192.168.115.130
+int g0/1.13 ip access-group 113 in
+
+access-list 111 permit tcp 192.168.115.0 0.0.0.127 any eq 80
+access-list 111 permit tcp 192.168.115.0 0.0.0.127 any eq 443
+access-list 111 permit ip 192.168.115.0 0.0.0.127 192.168.115.128 0.0.0.7
+access-list 111 permit ip 192.168.115.0 0.0.0.127 host 192.168.115.146
+int g0/1.11 ip access-group 111 in
+
+access-list 114 permit tcp any host 192.168.115.146 eq 80
+access-list 114 permit tcp any host 192.168.115.146 eq 443
+int g0/0 ip access-group 114 in

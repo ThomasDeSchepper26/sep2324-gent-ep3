@@ -1,0 +1,46 @@
+!
+hostname R1
+!
+interface GigabitEthernet0/0/0
+ ip address 192.168.115.253 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1.1
+ encapsulation dot1Q 1 native
+ ip address 192.168.115.137 255.255.255.248
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.11
+ encapsulation dot1Q 11
+ ip address 192.168.115.1 255.255.255.128
+!
+interface GigabitEthernet0/0/1.13
+ encapsulation dot1Q 13
+ ip address 192.168.115.145 255.255.255.252
+!
+interface GigabitEthernet0/0/1.42
+ encapsulation dot1Q 42
+ ip address 192.168.115.129 255.255.255.248
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip dhcp pool VLAN11
+ network 192.168.115.0 255.255.255.128
+ default-router 192.168.115.1
+ dns-server 192.168.115.132
+ dns-server 192.168.115.133
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.115.254 
+!
+end
+

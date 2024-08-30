@@ -1,0 +1,85 @@
+
+!
+hostname R1
+!
+
+ip dhcp excluded-address 192.168.115.1
+ip dhcp excluded-address 192.168.115.127
+!
+ip dhcp pool VLAN11
+ network 192.168.115.0 255.255.255.128
+ default-router 192.168.115.1
+ dns-server 192.168.115.132
+!
+interface GigabitEthernet0/0/0
+ ip address dhcp
+ ip access-group 114 in
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1.1
+ description management
+ encapsulation dot1Q 1 native
+ ip address 192.168.115.137 255.255.255.248
+!
+interface GigabitEthernet0/0/1.11
+ description werkstations
+ encapsulation dot1Q 11
+ ip address 192.168.115.1 255.255.255.128
+ ip helper-address 192.168.115.1
+ ip access-group 111 in
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.13
+ description DMZ
+ encapsulation dot1Q 13
+ ip address 192.168.115.145 255.255.255.252
+ ip access-group 113 in
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.42
+ encapsulation dot1Q 42
+ ip address 192.168.115.129 255.255.255.248
+ ip nat inside
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip nat inside source list 1 interface GigabitEthernet0/0/0 overload
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.115.254 
+!
+ip flow-export version 9
+!
+!
+access-list 111 permit ip 192.168.115.0 0.0.0.127 192.168.115.128 0.0.0.7
+access-list 111 permit ip 192.168.115.0 0.0.0.127 host 192.168.115.146
+access-list 111 permit tcp 192.168.115.0 0.0.0.127 any eq www
+access-list 111 permit tcp 192.168.115.0 0.0.0.127 any eq 443
+access-list 113 permit ip host 192.168.115.146 192.168.115.0 0.0.0.127
+access-list 113 permit ip host 192.168.115.146 host 192.168.115.130
+access-list 113 permit ip host 192.168.115.146 host 192.168.115.132
+access-list 113 permit ip host 192.168.115.146 host 192.168.115.133
+access-list 114 permit tcp any host 192.168.115.146 eq www
+access-list 114 permit tcp any host 192.168.115.146 eq 443
+access-list 1 permit 192.168.115.0 0.0.0.255
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+

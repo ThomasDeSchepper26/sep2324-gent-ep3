@@ -1,0 +1,27 @@
+# Lastenboek
+
+## Deliverables
+
+- Een bash script dat een TFTP-server installeert en configureert op de toegewezen linux server.
+
+## Deeltaken
+
+1. TFTP-server installatie en configuratie script
+   - Verantwoordelijke: Ward
+   - Tester: Jelle
+2. TFTP-server aanpassingen na demo
+   - Verantwoordelijke: Jelle
+   - Tester: Jelle
+
+## Tijdbesteding
+
+| Student    | Geschat | Gerealiseerd |
+| :--------- | ------: | -----------: |
+| Ward       |      2h |        1h08m |
+| Jelle      |      1h |        1h31m |
+| **Totaal** |      3h |        2h39m |
+
+![ticket1](./img/tftp-1.png)
+![ticket2](./img/tftp-2.png)
+![ticket1ex](./img/tftp-3.png)
+![ticket2ex](./img/tftp-4.png)

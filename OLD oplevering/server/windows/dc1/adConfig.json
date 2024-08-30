@@ -1,0 +1,24 @@
+{
+  "Domein": "DC=ad,DC=t01-syndus,DC=internal",
+  "TopOU": "Syndus",
+  "DepartmentsOU": "Departments",
+  "SubOUs": ["IT", "Productie"],
+  "DeviceOUs": ["Servers", "Computers"],
+  "Gebruikers": [
+    {
+      "Naam": "Jelle",
+      "OU": "IT",
+      "IsAdmin": true
+    },
+    {
+      "Naam": "Ward",
+      "OU": "IT",
+      "IsAdmin": true
+    },
+    {
+      "Naam": "Piet",
+      "OU": "Productie",
+      "IsAdmin": false
+    }
+  ]
+}

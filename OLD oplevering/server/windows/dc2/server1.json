@@ -1,0 +1,15 @@
+{
+  "IPAddress": "192.168.115.133",
+  "PrefixLength": "29",
+  "Gateway": "192.168.115.129",
+  "DomainName": "ad.t01-syndus.internal",
+  "SiteName": "Default-First-Site-Name",
+  "SafeModePassword": "AnotherComplexPasswordToSafeTheCaseInCaseShitHitsTheFan99@",
+  "ScopeName": "SyndusOffice",
+  "StartRange": "192.168.115.2",
+  "EndRange": "192.168.115.126",
+  "SubnetMask": "255.255.255.128",
+  "DnsServer": "192.168.115.132",
+  "DnsServer2": "192.168.115.133",
+  "DnsDomain": "ad.t01-syndus.internal"
+}
