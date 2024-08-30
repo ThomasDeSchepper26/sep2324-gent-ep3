@@ -1,0 +1,7 @@
+{
+  "CertName": "web.g08-syndus.internal",
+  "CertPassword": "ASecurePassword123",
+  "KeyLength": 2048,
+  "HashAlgorithm": "SHA256",
+  "ValidityYears": 5
+}

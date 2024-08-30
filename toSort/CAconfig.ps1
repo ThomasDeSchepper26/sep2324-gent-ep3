@@ -8,7 +8,6 @@
 # https://gist.github.com/jrotello/e3a744334f6324fcea32a6ec3941e0a2
 # https://pleasantpasswords.com/info/pleasant-password-server/b-server-configuration/2-certificates/setting-up-a-self-signed-certificate
 
-
 $CAconfig = Get-Content -Raw -Path ".\CAconfig.json" | ConvertFrom-Json
 
 # Check if script is run as administrator and quit otherwise 
@@ -21,6 +20,7 @@ if ($isAdministrator -eq $false) {
     exit
 }
 
+# Installation of the root CA with values out of JSON
 Install-WindowsFeature -Name ADCS-Cert-Authority -IncludeManagementTools
 
 Install-AdcsCertificationAuthority -CAType $CAConfig.CAType `
@@ -33,41 +33,3 @@ Install-AdcsCertificationAuthority -CAType $CAConfig.CAType `
                                    -LogDirectory $CAConfig.LogDirectory
 
 Start-Service ADCS
-
-# Generation of the certificate
-$webServerTemplate = Get-CATemplate | Where-Object { $_.Name -eq "Web Server" }
-$customTemplate = $webServerTemplate.Duplicate()
-
-# To move to JSON
-$customTemplate.DisplayName = "InternalWebServer"
-$customTemplate.ValidityPeriod = "Years"
-$customTemplate.ValidityPeriodUnits = 5
-$customTemplate.PublishingFlags = "AllowAutoEnroll"
-
-$customTemplate | Add-CATemplate
-
-$CAName = (Get-ADCSCertificationAuthority).Name
-
-$certRequest = @{
-    Subject              = "CN=web.g08-syndus.internal"
-    Template             = "InternalWebServer"
-    CertStoreLocation    = "Cert:\LocalMachine\My"
-    DnsName              = "web.g08-syndus.internal"
-}
-
-$cert = New-SelfSignedCertificate @certRequest
-
-$PfxPassword = ConvertTo-SecureString -String "YourP@ssw0rd" -Force -AsPlainText
-Export-PfxCertificate -Cert $cert -FilePath "C:\Certs\internalwebserver.pfx" -Password $PfxPassword
-
-Export-Certificate -Cert $CAName -FilePath "C:\Certs\RootCA.cer"
-
-Import-Module GroupPolicy
-$gpo = New-GPO -Name "Deploy Root CA Certificate"
-$gpoPath = "LDAP://cn=Public Key Services,cn=Public Key Services,CN=Services,CN=Configuration,DC=yourdomain,DC=com"
-Import-Certificate -FilePath "C:\Certs\RootCA.cer" -CertStoreLocation "Cert:\LocalMachine\Root"
-
-New-GPLink -Name "Deploy Root CA Certificate" -Target "LDAP://DC=g08-syndus,DC=internal"
-
-Write-Host "Certificate Authority setup complete, certificate issued and GPO created for deployment."
-
