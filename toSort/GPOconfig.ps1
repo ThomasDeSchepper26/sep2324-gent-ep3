@@ -17,5 +17,6 @@ if (-Not (Test-Path -Path $GPOPath)) {
 }
 
 Copy-Item -Path $CertFilePath -Destination $GPOPath
+Invoke-GPUpdate -Force
 
 Write-Host "GPO aangemaakt"
