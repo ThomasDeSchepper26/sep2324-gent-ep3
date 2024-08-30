@@ -61,7 +61,7 @@ interface GigabitEthernet0/2
 !
 interface Vlan1
  ip address 192.168.108.132 255.255.255.240
- ip default-gateway 192.168.108.129
+ ip default-gateway 192.168.108.131
  no shutdown
 !
 interface Vlan11
