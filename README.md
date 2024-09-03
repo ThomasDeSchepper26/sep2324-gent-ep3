@@ -54,4 +54,12 @@ Beschrijf hier of in een apart document al wat jullie onderling of met jullie be
 
 ## Inhoud GitHub repo
 
-<!-- Vul aan. -->
+sep2324-gent-ep3/          - Root van de repository
+├── extra-info/            - Directory aangeboden door lectoren.
+├── fallback/              - Repository met fallback scripts voor het geval laatste aanpassingen iets breken op de demo.
+├── opdrachten/            - Directory aangeboden door lectoren.
+├── pt/                    - Directory met alle netwerk scripts en de PKT simulatie file.
+├── t01-EP2/               - Directory met de scripts van EP2 groep Jelle, gebruikt als referentie om tot een werkend geheel te komen.
+├── testen/                - Directory met alle testplannen en testrapporten.
+├── uitvoering/            - Directory met alle scripts die gebruikt worden ter uitvoering van de opdracht. Logische indeling voorzien.
+
