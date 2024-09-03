@@ -169,6 +169,9 @@ sudo systemctl restart httpd
 
 echo -e "\033[0;32mApache hardening completed\033[0m"
 
+sudo ip route del default
+sudo ip route add default via 192.168.108.163
+
 # Exit script
 log '=== Provisioning completed successfully ==='
 exit 0

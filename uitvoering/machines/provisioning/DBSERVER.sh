@@ -60,5 +60,8 @@ EOF
 mysql --user=root --password="${db_root_password}" -e "SHOW DATABASES;"
 mysql --user=root --password="${db_root_password}" -e "SELECT User, Host FROM mysql.user;"
 
+sudo ip route del default
+sudo ip route add default via 192.168.108.147
+
 echo "Database provisioning completed successfully."
 exit 0
