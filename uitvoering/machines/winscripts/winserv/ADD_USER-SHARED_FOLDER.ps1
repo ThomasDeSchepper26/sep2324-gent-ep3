@@ -53,3 +53,12 @@ foreach ($Admin in $DomainAdmins) {
 Set-Acl -Path $SharePath -AclObject $Acl
 
 Write-Host "De map $SharePath is gedeeld met toegang voor $Username en Domain Admins."
+
+$LogonScriptPath = "\\ad\NETLOGON\$Username-logon.ps1"
+
+$LogonScriptContent = @"
+New-PSDrive -Name "G" -PSProvider FileSystem -Root "\\ad\$Username" -Persist
+"@
+
+Set-Content -Path $LogonScriptPath -Value $LogonScriptContent
+Set-ADUser -Identity $Username -ScriptPath "$Username-logon.ps1"
