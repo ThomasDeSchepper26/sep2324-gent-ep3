@@ -103,7 +103,7 @@ sudo chmod -R 600 "${DIR_SSL_KEY}"/*
 # --------------------------------------------------------------------------------------------------
 
 echo "Editing Apache config file to set up as a reverse proxy"
-sudo tee "/etc/httpd/conf.d/t01-syndus.internal.conf" > /dev/null <<EOF
+sudo tee "/etc/httpd/conf.d/g08-systemsolutions.internal.conf" > /dev/null <<EOF
 <VirtualHost *:80>
     ServerName www.${DOMAIN}
     ServerAlias ${DOMAIN}
@@ -129,6 +129,8 @@ sudo tee "/etc/httpd/conf.d/t01-syndus.internal.conf" > /dev/null <<EOF
     ProxyPassReverse / http://${WEB_IP}/
 </VirtualHost>
 EOF
+
+sed -i 's/\r//' /etc/httpd/conf.d/g08-systemsolutions.internal.conf
 
 # --------------------------------------------------------------------------------------------------
 # SELinux configuration
