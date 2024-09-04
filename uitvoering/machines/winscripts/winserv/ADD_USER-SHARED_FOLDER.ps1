@@ -58,6 +58,7 @@ $LogonScriptPath = "\\ad\NETLOGON\$Username-logon.ps1"
 
 
 $LogonScriptContent = @"
+Start-Sleep -Seconds 10
 New-PSDrive -Name "S" -Root "\\ad\$Username" -Persist -PSProvider "FileSystem" 
 "@
 
