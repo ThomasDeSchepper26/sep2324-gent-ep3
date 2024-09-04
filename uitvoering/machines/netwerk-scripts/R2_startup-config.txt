@@ -76,7 +76,7 @@ ip access-list standard PAT
 !
 ip access-list extended MANAGEMENT
  permit ip 192.168.108.128 0.0.0.15 any
- permit icmp any any echo
+ permit icmp any any
  deny ip any any
 !
 ip access-list extended CLIENTS
@@ -84,7 +84,7 @@ ip access-list extended CLIENTS
  permit ip 192.168.108.160 0.0.0.7 any
  permit ip 192.168.108.144 0.0.0.15 any
  permit tcp any any established
- permit icmp any any echo
+ permit icmp any any
  deny ip any any
 !
 ip access-list extended REVERSEPROXY
@@ -92,7 +92,7 @@ ip access-list extended REVERSEPROXY
  permit tcp any any established
  permit tcp any any eq 80
  permit tcp any any eq 443
- permit icmp any any echo
+ permit icmp any any
  deny ip any any
 !
 ip access-list extended SERVER
@@ -101,7 +101,7 @@ ip access-list extended SERVER
  permit ip 192.168.108.0 0.0.0.127 any
  permit ip 192.168.108.160 0.0.0.7 any
  permit ip 192.168.108.144 0.0.0.15 any
- permit icmp any any echo
+ permit icmp any any
  deny ip any any
 !
 end

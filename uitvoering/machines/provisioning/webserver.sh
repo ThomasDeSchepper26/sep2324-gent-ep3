@@ -34,9 +34,6 @@ readonly WORDPRESS_VERSION="5.9"  # Update to the latest version
 readonly WORDPRESS_URL="https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"
 readonly WORDPRESS_DIR="/var/www/html/wordpress"
 
-sudo ip route del default
-sudo ip route add default via 192.168.108.147
-
 #------------------------------------------------------------------------------
 # Provision server
 #------------------------------------------------------------------------------
@@ -192,3 +189,6 @@ echo "</table>\n";
 </body>
 </html>
 EOF
+
+sudo ip route del default
+sudo ip route add default via 192.168.108.147

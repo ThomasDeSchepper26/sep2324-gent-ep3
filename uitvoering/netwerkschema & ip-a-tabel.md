@@ -67,6 +67,8 @@ Nuttige commando's:
 
 - ophalen running-config op S1
 ```bash
+ en
+ conf t
  interface FastEthernet0/5
  switchport access vlan 1
  switchport mode access
