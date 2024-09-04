@@ -56,8 +56,9 @@ Write-Host "De map $SharePath is gedeeld met toegang voor $Username en Domain Ad
 
 $LogonScriptPath = "\\ad\NETLOGON\$Username-logon.ps1"
 
+
 $LogonScriptContent = @"
-New-PSDrive -Name "G" -PSProvider FileSystem -Root "\\ad\$Username" -Persist
+New-PSDrive -Name "S" -Root "\\ad\$Username" -Persist -PSProvider "FileSystem" 
 "@
 
 Set-Content -Path $LogonScriptPath -Value $LogonScriptContent
